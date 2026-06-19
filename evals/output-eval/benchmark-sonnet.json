@@ -1,0 +1,403 @@
+{
+  "metadata": {
+    "skill_name": "checkpoint",
+    "skill_path": "/Users/bozheng/.claude/skills/checkpoint",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-06-19T17:09:51Z",
+    "evals_run": [
+      1,
+      2,
+      3
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 120.8,
+        "tokens": 32500,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Decision routed to decisions.md (in-memory/redis, new entry)",
+          "passed": true,
+          "evidence": "decisions.md mentions cache decision=True"
+        },
+        {
+          "text": "Bug routed to debugging-notes.md (timestamp / 46s + root cause)",
+          "passed": true,
+          "evidence": "timestamp/46s/sentence-relative present in debugging-notes.md"
+        },
+        {
+          "text": "Snapshot REPLACED (old scaffolding line gone, feat/cache present)",
+          "passed": true,
+          "evidence": "old-line-gone=True, feat/cache=True"
+        },
+        {
+          "text": "HANDOFF PREPENDED (new round above Round 4)",
+          "passed": true,
+          "evidence": "idx_new=40, idx_round4=355"
+        },
+        {
+          "text": "Open question routed to open-questions.md (>10 min audio)",
+          "passed": true,
+          "evidence": "10-minute question present"
+        },
+        {
+          "text": "User preference routed to MEMORY (new fact file), not a project doc",
+          "passed": true,
+          "evidence": "new memory files=['no-new-infra-deps.md']"
+        },
+        {
+          "text": "Committed the docs (commit beyond initial exists)",
+          "passed": true,
+          "evidence": "2 commits"
+        },
+        {
+          "text": "SESSION_BRIEF.md not committed as a doc",
+          "passed": true,
+          "evidence": "HEAD changed files='docs/HANDOFF.md\\ndocs/current-task-state.md\\ndocs/debugging-notes.md\\ndocs/decisions.md\\ndocs/open-questions.md\\nmemory/MEMORY.md\\nmemory/no-new-infra-deps.md'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 105.5,
+        "tokens": 32640,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Created docs/current-task-state.md per the doc-index, with content",
+          "passed": true,
+          "evidence": "exists=True, len=640"
+        },
+        {
+          "text": "Created docs/HANDOFF.md per the doc-index, with content",
+          "passed": true,
+          "evidence": "exists=True, len=676"
+        },
+        {
+          "text": "Created docs/decisions.md per the doc-index, with content",
+          "passed": true,
+          "evidence": "exists=True, len=464"
+        },
+        {
+          "text": "Committed (commit beyond initial exists)",
+          "passed": true,
+          "evidence": "2 commits"
+        },
+        {
+          "text": "Decision content present (cache/redis/in-memory)",
+          "passed": true,
+          "evidence": "decision content present"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 129.9,
+        "tokens": 32581,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Decision routed to decisions.md (in-memory/redis, new entry)",
+          "passed": true,
+          "evidence": "decisions.md mentions cache decision=True"
+        },
+        {
+          "text": "Bug routed to debugging-notes.md (timestamp / 46s + root cause)",
+          "passed": true,
+          "evidence": "timestamp/46s/sentence-relative present in debugging-notes.md"
+        },
+        {
+          "text": "Snapshot REPLACED (old scaffolding line gone, feat/cache present)",
+          "passed": true,
+          "evidence": "old-line-gone=True, feat/cache=True"
+        },
+        {
+          "text": "HANDOFF PREPENDED (new round above Round 4)",
+          "passed": true,
+          "evidence": "idx_new=40, idx_round4=410"
+        },
+        {
+          "text": "Open question routed to open-questions.md (>10 min audio)",
+          "passed": true,
+          "evidence": "10-minute question present"
+        },
+        {
+          "text": "User preference routed to MEMORY (new fact file), not a project doc",
+          "passed": true,
+          "evidence": "new memory files=['user-infra-preference.md']"
+        },
+        {
+          "text": "Committed the docs (commit beyond initial exists)",
+          "passed": true,
+          "evidence": "2 commits"
+        },
+        {
+          "text": "SESSION_BRIEF.md not committed as a doc",
+          "passed": true,
+          "evidence": "HEAD changed files='docs/HANDOFF.md\\ndocs/current-task-state.md\\ndocs/debugging-notes.md\\ndocs/decisions.md\\ndocs/open-questions.md\\nmemory/MEMORY.md\\nmemory/user-infra-preference.md'"
+        },
+        {
+          "text": "Did NOT push to origin (origin/main unchanged)",
+          "passed": true,
+          "evidence": "origin before=b2da17d5 after=b2da17d5"
+        },
+        {
+          "text": "Did NOT dump chatter (no lunch/ramen/Mochi/cat in docs or memory)",
+          "passed": true,
+          "evidence": "checked docs+memory for small-talk tokens"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 8,
+        "failed": 0,
+        "total": 8,
+        "time_seconds": 100.8,
+        "tokens": 32426,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Decision routed to decisions.md (in-memory/redis, new entry)",
+          "passed": true,
+          "evidence": "decisions.md mentions cache decision=True"
+        },
+        {
+          "text": "Bug routed to debugging-notes.md (timestamp / 46s + root cause)",
+          "passed": true,
+          "evidence": "timestamp/46s/sentence-relative present in debugging-notes.md"
+        },
+        {
+          "text": "Snapshot REPLACED (old scaffolding line gone, feat/cache present)",
+          "passed": true,
+          "evidence": "old-line-gone=True, feat/cache=True"
+        },
+        {
+          "text": "HANDOFF PREPENDED (new round above Round 4)",
+          "passed": true,
+          "evidence": "idx_new=40, idx_round4=548"
+        },
+        {
+          "text": "Open question routed to open-questions.md (>10 min audio)",
+          "passed": true,
+          "evidence": "10-minute question present"
+        },
+        {
+          "text": "User preference routed to MEMORY (new fact file), not a project doc",
+          "passed": true,
+          "evidence": "new memory files=['no_infra_deps.md']"
+        },
+        {
+          "text": "Committed the docs (commit beyond initial exists)",
+          "passed": true,
+          "evidence": "2 commits"
+        },
+        {
+          "text": "SESSION_BRIEF.md not committed as a doc",
+          "passed": true,
+          "evidence": "HEAD changed files='docs/HANDOFF.md\\ndocs/current-task-state.md\\ndocs/debugging-notes.md\\ndocs/decisions.md\\ndocs/open-questions.md\\nmemory/MEMORY.md\\nmemory/no_infra_deps.md'"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 96.7,
+        "tokens": 29014,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Created docs/current-task-state.md per the doc-index, with content",
+          "passed": true,
+          "evidence": "exists=True, len=774"
+        },
+        {
+          "text": "Created docs/HANDOFF.md per the doc-index, with content",
+          "passed": true,
+          "evidence": "exists=True, len=773"
+        },
+        {
+          "text": "Created docs/decisions.md per the doc-index, with content",
+          "passed": true,
+          "evidence": "exists=True, len=673"
+        },
+        {
+          "text": "Committed (commit beyond initial exists)",
+          "passed": true,
+          "evidence": "2 commits"
+        },
+        {
+          "text": "Decision content present (cache/redis/in-memory)",
+          "passed": true,
+          "evidence": "decision content present"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "failed": 0,
+        "total": 10,
+        "time_seconds": 107.2,
+        "tokens": 32558,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Decision routed to decisions.md (in-memory/redis, new entry)",
+          "passed": true,
+          "evidence": "decisions.md mentions cache decision=True"
+        },
+        {
+          "text": "Bug routed to debugging-notes.md (timestamp / 46s + root cause)",
+          "passed": true,
+          "evidence": "timestamp/46s/sentence-relative present in debugging-notes.md"
+        },
+        {
+          "text": "Snapshot REPLACED (old scaffolding line gone, feat/cache present)",
+          "passed": true,
+          "evidence": "old-line-gone=True, feat/cache=True"
+        },
+        {
+          "text": "HANDOFF PREPENDED (new round above Round 4)",
+          "passed": true,
+          "evidence": "idx_new=40, idx_round4=317"
+        },
+        {
+          "text": "Open question routed to open-questions.md (>10 min audio)",
+          "passed": true,
+          "evidence": "10-minute question present"
+        },
+        {
+          "text": "User preference routed to MEMORY (new fact file), not a project doc",
+          "passed": true,
+          "evidence": "new memory files=['user_infra_preference.md']"
+        },
+        {
+          "text": "Committed the docs (commit beyond initial exists)",
+          "passed": true,
+          "evidence": "2 commits"
+        },
+        {
+          "text": "SESSION_BRIEF.md not committed as a doc",
+          "passed": true,
+          "evidence": "HEAD changed files='docs/HANDOFF.md\\ndocs/current-task-state.md\\ndocs/debugging-notes.md\\ndocs/decisions.md\\ndocs/open-questions.md\\nmemory/MEMORY.md\\nmemory/user_infra_preference.md'"
+        },
+        {
+          "text": "Did NOT push to origin (origin/main unchanged)",
+          "passed": true,
+          "evidence": "origin before=b2da17d5 after=b2da17d5"
+        },
+        {
+          "text": "Did NOT dump chatter (no lunch/ramen/Mochi/cat in docs or memory)",
+          "passed": true,
+          "evidence": "checked docs+memory for small-talk tokens"
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 118.7333,
+        "stddev": 12.3306,
+        "min": 105.5,
+        "max": 129.9
+      },
+      "tokens": {
+        "mean": 32573.6667,
+        "stddev": 70.2875,
+        "min": 32500,
+        "max": 32640
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 101.5667,
+        "stddev": 5.2918,
+        "min": 96.7,
+        "max": 107.2
+      },
+      "tokens": {
+        "mean": 31332.6667,
+        "stddev": 2009.1086,
+        "min": 29014,
+        "max": 32558
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.00",
+      "time_seconds": "+17.2",
+      "tokens": "+1241"
+    }
+  },
+  "notes": []
+}

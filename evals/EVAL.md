@@ -74,11 +74,57 @@ under-trigger behavior that a judge panel structurally cannot detect.
 
 ---
 
+## C. Output quality — with-skill vs baseline (skill-creator method)
+
+Ran the skill end-to-end on synthetic projects and compared **with-skill vs a
+no-skill baseline**, graded programmatically
+([`output-eval/grade_checkpoint.py`](./output-eval/grade_checkpoint.py),
+fixtures [`setup_fixtures.sh`](./output-eval/setup_fixtures.sh)). 3 scenarios on
+Sonnet — full routing / empty-docs (create per the doc-index) / discipline (real
+`origin` remote + small-talk mixed in) — plus the two discipline-heavy scenarios
+re-run on Haiku to stress a weaker model. Receipts: [`output-eval/`](./output-eval).
+
+| Config | Sonnet | Haiku |
+|---|---|---|
+| with_skill | 100% | 100% |
+| baseline (no skill) | 100% | 100% |
+| **delta** | **+0.00** | **+0.00** |
+
+Both configs, on both models, correctly: replaced the snapshot (not appended),
+prepended the changelog, appended decisions/bugs, routed the user preference to
+memory, **committed-not-pushed** (verified against a real origin), and **dropped
+the small-talk**. (Time/token cost: the skill adds ~17s and ~1.2k tokens on
+Sonnet — the cost of loading and following the body.)
+
+### Honest reading — no capability uplift here, and the eval design is why
+
+- Both sides were handed a clean, pre-distilled `SESSION_BRIEF.md`. In a real
+  session there is no brief — the model must **synthesize** what mattered from a
+  long, messy conversation. That is the skill's Step 2, and this eval neutralized
+  exactly that part.
+- Every fixture had a guiding `CLAUDE.md` doc-index; **that index, not the skill,
+  did most of the routing.** An unguided project would lean on the skill's Step-0
+  discovery taxonomy far more.
+- Presence-based assertions grade correctness, not prose quality.
+
+So the skill's demonstrated value is **ergonomic and consistency, not a quality
+boost**: one word `/checkpoint` instead of restating the routing discipline each
+time, and an encoded discipline you don't have to rely on the model re-deriving —
+plus the synthesis step in real (briefless) use, which this harness can't
+isolate. On a guided task with a clear brief, a capable *or* weak model already
+does this well without the skill.
+
+---
+
 ## Outcome
 
 - **Description unchanged** — `run_loop` confirmed the original is best by
   held-out test score.
-- **0% false positives** under both methods (real triggering and judge panel).
+- **0% false positives** under both triggering methods (real `run_loop` + judge panel).
+- **Output quality: no measurable with-vs-without delta** (100% both, both
+  models) on guided tasks — the skill's value is ergonomic + encoded discipline,
+  not a capability uplift. Honest limitation: the eval handed both sides a
+  pre-distilled brief and a guiding doc-index, removing where the skill helps most.
 - **Design validated**: explicit `/checkpoint` + proactive offer is correct;
   auto-triggering "save it into the docs" tasks is unreliable by nature, so the
   skill rightly doesn't depend on it.

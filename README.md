@@ -85,8 +85,11 @@ notes, …) correctly does **not** trigger. The optimizer kept the original
 description (no rewrite beat it on held-out test). Auto-trigger recall is low and
 intentionally not relied upon: this skill is `/`-invoked (`disable-model-invocation`),
 and the eval confirms models under-trigger "just save it into the docs" tasks —
-which is exactly why explicit invocation + a proactive offer is the design.
-Full method, numbers, and raw receipts under [`evals/`](./evals).
+which is exactly why explicit invocation + a proactive offer is the design. A
+with-skill-vs-baseline **output** eval (Sonnet + Haiku, programmatically graded)
+found **no capability delta** on guided tasks — both 100% — so the skill's value
+is ergonomic (one-word `/checkpoint` + proactive offer) and encoded discipline,
+not a quality uplift. Full method, numbers, and raw receipts under [`evals/`](./evals).
 
 ## License
 

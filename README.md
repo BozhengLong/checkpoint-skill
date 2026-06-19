@@ -75,6 +75,14 @@ before compaction (it offers; you still run `/checkpoint`):
   "Checkpoint before we compact?". Don't run it unprompted.
 ```
 
+## Validation
+
+Tuned with a `skill-creator`-style eval round (blind judges on Sonnet + a Haiku
+weak-model stress pass): triggering hit 10/10 / false-positive 0/10, homonym
+collisions 30/30 rejected, output routing 9/9. One weak-model false positive
+("summarize this conversation") was found and fixed. Cases and the full report
+are under [`evals/`](./evals).
+
 ## License
 
 [MIT](LICENSE)

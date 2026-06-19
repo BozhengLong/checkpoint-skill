@@ -1,48 +1,84 @@
-# Eval round 1 — 2026-06-19
+# Eval — checkpoint
 
-Methodology mirrors Anthropic's `skill-creator`: **triggering** is measured by
-blind judges that see only the skill `name` + `description` and classify each
-prompt USE vs SKIP; **output quality** is measured by having an execution agent
-run the full checkpoint on a synthetic project (no rubric shown to it) and
-grading the resulting files. Cases are in [`evals.json`](./evals.json).
+Two complementary methods. **Method A (skill-creator's real `run_loop.py`) is the
+authoritative one** — it measures actual triggering by running real `claude -p`
+subprocesses. Method B (a judge panel) measures description *discrimination* and
+is kept for the record, with its limitation noted.
 
-Judges: 3 independent agents per pass (Claude Sonnet for the main suite; Claude
-**Haiku** for a deliberate weak-model stress pass — a public skill runs on
-whatever model the user has).
+---
 
-## Results
+## A. Real triggering loop — `skill-creator/run_loop.py`
 
-| Pass | Cases × judges | Result |
-|---|---|---|
-| Triggering — should-use vs should-not-use | 20 × 3 (Sonnet) | **Hit 10/10, false-positive 0/10, inter-rater 100%** |
-| Boundary — deliberately ambiguous near-misses | 6 × 3 (Sonnet) | **100% unanimous**, all calls defensible |
-| Homonym / name-collision (ML / DB / debugger / git "checkpoint") | 5 × 3 (Sonnet) + 5 × 3 (Haiku) | **30/30 SKIP** — the name "checkpoint" leaks no false positives |
-| Output quality — synthetic project, no rubric given | 1 scenario (Sonnet) | **9/9 rubric** (correct replace/prepend/append/memory routing, no dup, committed not pushed) |
+Opus, 20 queries × 3 runs each, 60/40 train/test split (stratified), up to 5
+iterations. The script writes the description into a throwaway command file and
+runs real `claude -p <query>`, detecting via stream events whether Claude
+actually consults the skill. `best_description` is chosen by **held-out test**
+score to prevent overfitting. Raw receipts: [`run_loop-results.json`](./run_loop-results.json).
 
-The traps held: `commit this code`, `push to GitHub`, `update README`, `write a
-docstring`, `recall a past decision` all correctly SKIP. Judges cited the
-description's *"commits the docs without pushing"* and *"not dumping the
-transcript"* clauses as the discriminators.
+| Iter | Train (run-level) | Precision | Recall | Test passed (query-level) |
+|---|---|---|---|---|
+| 1 (original desc) | 20/36 | **100%** | 11% | **4/8** ← best |
+| 2 | 21/36 | 100% | 17% | 4/8 |
+| 3 | 20/36 | 100% | 11% | 4/8 |
+| 4 | 19/36 | 100% | 6% | 4/8 |
+| 5 | 20/36 | 100% | 17% | 4/8 |
 
-## Finding + fix (the actual tuning)
+**Result: `best_description` == the original description.** The optimizer's 4
+rewrites (longer, "pushier") did not beat baseline on held-out test, so it kept
+the original. No change applied.
 
-The weak-model (Haiku) pass surfaced one real defect:
+**Precision = 100% on every iteration.** All 10 should-not-trigger queries —
+commit code, push/PR, summarize-for-the-user, docstring, README, recall-a-fact,
+ML training checkpoint, database/WAL checkpoint, zip/backup, release notes —
+produced trigger rate 0.0 in every run. Zero false positives.
 
-- **"Summarize this conversation for me." → USE on 2 of 3 Haiku judges** (Sonnet
-  got it right 3/3). A weaker model conflated *summarize the chat for the user*
-  with *consolidate session knowledge into docs*.
+**Recall is low (6–17%).** Most should-trigger queries ("persist our progress
+into the repo docs", the Chinese `/compact` one, "consolidate everything into
+the docs and commit") triggered 0/3 or 1/3.
 
-Fix (v1.0.1): added to the description —
-> *It writes structured knowledge to durable files and is not a conversation
-> summary or recap for the user.*
+### Why recall is low — and why it doesn't matter here
 
-— plus a matching `Don't` bullet in the skill body.
+- It is the documented effect (skill-creator's own SKILL.md): **Claude
+  under-triggers skills for tasks it can handle directly.** "Write where we are
+  into the docs" is something the model just *does* with file tools rather than
+  consulting a skill. The optimizer's failure to raise recall across 4 rewrites
+  confirms this is a triggering-mechanism property, not a wording defect.
+- It is **moot for this skill**: `checkpoint` ships `disable-model-invocation:
+  true` — it never auto-fires; the user runs `/checkpoint`. The loop measures
+  auto-triggering, which is deliberately off.
+- So the run **validates the design**: because auto-trigger recall for
+  "just-do-it" doc tasks is inherently low, the right architecture is explicit
+  `/checkpoint` + a proactive *offer* — not reliance on auto-invocation. The 0%
+  false-positive rate means that even with auto-invocation enabled, it wouldn't
+  misfire.
 
-**Re-test (Haiku, 3 judges):** the failing case plus two recap/summary variants
-now **SKIP 3/3**; legit triggers ("save before /compact", "consolidate into docs
-and commit") still **USE 3/3** and the code-commit trap still **SKIP 3/3**.
-Weak-model summary false-positive rate **67% → 0%, no regression**.
+(Run on Opus; recall would differ on other models. Precision/FP is the load-bearing metric for this skill.)
 
-The homonym disambiguation that was *considered* was **not** added: the data
-showed it was unnecessary (30/30 SKIP without it), so adding it would have been
-unjustified overfitting.
+---
+
+## B. Judge panel — description discrimination (kept for the record)
+
+3 blind judges (Sonnet for the main suite, Haiku for a weak-model pass) see the
+name + description only and classify USE/SKIP. Cases: [`evals.json`](./evals.json).
+
+- 20 core (10 use / 10 not), 6 boundary, 5 homonym: clean separation; all
+  negatives SKIP. Haiku surfaced one false positive — "summarize this
+  conversation for me" → USE 2/3 — fixed by adding *"is not a conversation
+  summary or recap for the user"* to the description; re-test 0/3 FP, no regression.
+
+**Limitation (why Method A is authoritative):** judges rate whether using the
+skill would be *appropriate*, not whether the model would actually *bother to
+consult* it. Method A showed the original description's discrimination holds at
+the real triggering layer (precision 100%), while also revealing the
+under-trigger behavior that a judge panel structurally cannot detect.
+
+---
+
+## Outcome
+
+- **Description unchanged** — `run_loop` confirmed the original is best by
+  held-out test score.
+- **0% false positives** under both methods (real triggering and judge panel).
+- **Design validated**: explicit `/checkpoint` + proactive offer is correct;
+  auto-triggering "save it into the docs" tasks is unreliable by nature, so the
+  skill rightly doesn't depend on it.

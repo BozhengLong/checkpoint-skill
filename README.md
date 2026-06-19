@@ -77,11 +77,16 @@ before compaction (it offers; you still run `/checkpoint`):
 
 ## Validation
 
-Tuned with a `skill-creator`-style eval round (blind judges on Sonnet + a Haiku
-weak-model stress pass): triggering hit 10/10 / false-positive 0/10, homonym
-collisions 30/30 rejected, output routing 9/9. One weak-model false positive
-("summarize this conversation") was found and fixed. Cases and the full report
-are under [`evals/`](./evals).
+Evaluated with Anthropic's `skill-creator` (the real `run_loop.py`, driving
+actual `claude -p` triggering, 20 queries × 3, 60/40 train/test on Opus) plus a
+blind judge panel. Headline: **0% false positives** — every non-checkpoint
+request (commit/push code, summarize for the user, ML/DB checkpoints, release
+notes, …) correctly does **not** trigger. The optimizer kept the original
+description (no rewrite beat it on held-out test). Auto-trigger recall is low and
+intentionally not relied upon: this skill is `/`-invoked (`disable-model-invocation`),
+and the eval confirms models under-trigger "just save it into the docs" tasks —
+which is exactly why explicit invocation + a proactive offer is the design.
+Full method, numbers, and raw receipts under [`evals/`](./evals).
 
 ## License
 

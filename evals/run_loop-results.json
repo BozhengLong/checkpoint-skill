@@ -1,0 +1,1390 @@
+{
+  "exit_reason": "max_iterations (5)",
+  "original_description": "Consolidate the current coding session's durable knowledge into the project's persistent docs and memory before the context window is compacted or the session ends, while recall is still high-fidelity. Run it when wrapping up a work batch, right before compacting, or whenever the user asks to checkpoint, consolidate, save context, or hand off. It reviews what the session produced \u2014 decisions and their rationale, bugs and root causes, dead-ends, the current \"you are here\" state, and new open questions \u2014 and routes each into the right document (snapshot replaced, changelog prepended, decisions and bugs appended), then commits the docs without pushing. It writes structured knowledge to durable files and is not a conversation summary or recap for the user. The value is editorial judgment about what to persist and where, not dumping the transcript.",
+  "best_description": "Consolidate the current coding session's durable knowledge into the project's persistent docs and memory before the context window is compacted or the session ends, while recall is still high-fidelity. Run it when wrapping up a work batch, right before compacting, or whenever the user asks to checkpoint, consolidate, save context, or hand off. It reviews what the session produced \u2014 decisions and their rationale, bugs and root causes, dead-ends, the current \"you are here\" state, and new open questions \u2014 and routes each into the right document (snapshot replaced, changelog prepended, decisions and bugs appended), then commits the docs without pushing. It writes structured knowledge to durable files and is not a conversation summary or recap for the user. The value is editorial judgment about what to persist and where, not dumping the transcript.",
+  "best_score": "4/8",
+  "best_train_score": "6/12",
+  "best_test_score": "4/8",
+  "final_description": "Use this skill whenever the user wants the knowledge from this coding session written into durable files before it's lost \u2014 into repo docs, a handoff or state file, or memory \u2014 then committed. This is the go-to skill the moment they signal the session is ending or shrinking: \"checkpoint\", \"I'm about to /compact\", \"context is getting huge\", \"save/persist/consolidate our progress\", \"record where we are\", \"update the handoff doc\", \"wrapping up\", \"I need to step away\", or handing off to the next session / tomorrow-me. Also fire when they ask to write down specific session artifacts \u2014 decisions and rationale, a bug and its root cause, what was tried and rejected, current state, open questions, what's next. Works in any language. The intent is moving volatile chat knowledge into version-controlled docs so the next session continues cleanly. Skip it for pushing/PRs, release notes, zipping or backing up files, database/WAL or ML-training checkpoints, or merely recapping the chat back to the user.",
+  "iterations_run": 5,
+  "holdout": 0.4,
+  "train_size": 12,
+  "test_size": 8,
+  "history": [
+    {
+      "iteration": 1,
+      "description": "Consolidate the current coding session's durable knowledge into the project's persistent docs and memory before the context window is compacted or the session ends, while recall is still high-fidelity. Run it when wrapping up a work batch, right before compacting, or whenever the user asks to checkpoint, consolidate, save context, or hand off. It reviews what the session produced \u2014 decisions and their rationale, bugs and root causes, dead-ends, the current \"you are here\" state, and new open questions \u2014 and routes each into the right document (snapshot replaced, changelog prepended, decisions and bugs appended), then commits the docs without pushing. It writes structured knowledge to durable files and is not a conversation summary or recap for the user. The value is editorial judgment about what to persist and where, not dumping the transcript.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "let's make a savepoint of where the project stands: update the changelog with this round, refresh the 'you are here' snapshot, and note the new open question about audio longer than 10 minutes",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "before we wrap for the day: capture the decision to drop redis, the root cause of that 46s timestamp bug, and the dead-end with the scheduler lib, somewhere durable so we don't relitigate it next week",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "write a docstring for the run_transcribe function explaining each parameter and the return value",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "wait what did we decide earlier about the cache \u2014 redis or in-memory? i forget",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we made a bunch of architecture calls today (subprocess workers, sqlite for tasks, the single render path). persist those with their rationale into the decisions doc before i lose this thread",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you summarize this conversation for me so i can paste it to my teammate on slack?",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the README install section with the new pip command and the python 3.12 requirement",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "running low on context window here. make sure the stuff we figured out about the migration ordering doesn't evaporate when this session compacts",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "description": "Use this skill to capture what a coding session produced into the project's durable docs and memory before that knowledge is lost. Trigger whenever the user wants to save, persist, consolidate, record, or write down the session's work \u2014 decisions and rationale, bugs and root causes, dead-ends, current \"where we are\" state, what's next, or open questions \u2014 into repo docs, a handoff/state file, or memory, then commit. Fire on intents like \"checkpoint\", \"consolidate this session\", \"hand off\", \"update the handoff doc\", \"save our progress/context\", \"record what we did\", or \"I'm about to compact / hit the context limit / step away \u2014 write down where we are first\" (in any language). The goal is moving session knowledge out of the volatile conversation into persistent files. Do NOT use it for committing or pushing arbitrary code, opening PRs, release notes, zipping or backing up files, database/WAL checkpoints, ML training checkpoints, or summarizing the chat back to the user.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "let's make a savepoint of where the project stands: update the changelog with this round, refresh the 'you are here' snapshot, and note the new open question about audio longer than 10 minutes",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "before we wrap for the day: capture the decision to drop redis, the root cause of that 46s timestamp bug, and the dead-end with the scheduler lib, somewhere durable so we don't relitigate it next week",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "we made a bunch of architecture calls today (subprocess workers, sqlite for tasks, the single render path). persist those with their rationale into the decisions doc before i lose this thread",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "write a docstring for the run_transcribe function explaining each parameter and the return value",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "wait what did we decide earlier about the cache \u2014 redis or in-memory? i forget",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the README install section with the new pip command and the python 3.12 requirement",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "running low on context window here. make sure the stuff we figured out about the migration ordering doesn't evaporate when this session compacts",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you summarize this conversation for me so i can paste it to my teammate on slack?",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "description": "Use this skill when the user wants to preserve a coding session's knowledge into the project's docs and memory before it's lost \u2014 typically when wrapping up, stepping away, handing off, or about to /compact or hit the context limit. Trigger it for asks like \"checkpoint\", \"consolidate this session into the docs\", \"record/persist/save our progress before I compact\", \"update the handoff doc and current state\", \"write down where we are, the decisions, the bug and root cause, and what's next so the next session continues cleanly\" \u2014 in any language. The intent: move session decisions, rationale, bugs, dead-ends, current state, and open questions out of the volatile chat into version-controlled files, then commit. Do NOT trigger for committing/pushing arbitrary code, PRs, release notes, zipping or backing up files, database/WAL or ML training checkpoints, or summarizing the chat back to the user.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "let's make a savepoint of where the project stands: update the changelog with this round, refresh the 'you are here' snapshot, and note the new open question about audio longer than 10 minutes",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "before we wrap for the day: capture the decision to drop redis, the root cause of that 46s timestamp bug, and the dead-end with the scheduler lib, somewhere durable so we don't relitigate it next week",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "write a docstring for the run_transcribe function explaining each parameter and the return value",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we made a bunch of architecture calls today (subprocess workers, sqlite for tasks, the single render path). persist those with their rationale into the decisions doc before i lose this thread",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wait what did we decide earlier about the cache \u2014 redis or in-memory? i forget",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "can you summarize this conversation for me so i can paste it to my teammate on slack?",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "running low on context window here. make sure the stuff we figured out about the migration ordering doesn't evaporate when this session compacts",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "update the README install section with the new pip command and the python 3.12 requirement",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 4,
+      "description": "Use this skill when the user wants to write down what this coding session figured out \u2014 into the project's docs, a handoff/state file, or memory \u2014 so it survives the conversation ending or being compacted. Typical triggers: \"checkpoint\", \"save/persist our progress\", \"consolidate this session into the docs\", \"update the handoff doc\", \"record where we are\", \"write down the decisions, the bug and its root cause, and what's next\" \u2014 and especially when they say they're about to /compact, hitting the context limit, stepping away, or handing off to the next session. Works in any language. The aim is moving decisions and their rationale, bugs and root causes, dead-ends, current state, and open questions out of the chat into version-controlled files, then committing. Do NOT use it for committing or pushing arbitrary code, opening PRs, release notes, zipping or backing up files, database/WAL or ML-training checkpoints, or just recapping the chat back to the user.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "let's make a savepoint of where the project stands: update the changelog with this round, refresh the 'you are here' snapshot, and note the new open question about audio longer than 10 minutes",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "before we wrap for the day: capture the decision to drop redis, the root cause of that 46s timestamp bug, and the dead-end with the scheduler lib, somewhere durable so we don't relitigate it next week",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "write a docstring for the run_transcribe function explaining each parameter and the return value",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we made a bunch of architecture calls today (subprocess workers, sqlite for tasks, the single render path). persist those with their rationale into the decisions doc before i lose this thread",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "running low on context window here. make sure the stuff we figured out about the migration ordering doesn't evaporate when this session compacts",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wait what did we decide earlier about the cache \u2014 redis or in-memory? i forget",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "can you summarize this conversation for me so i can paste it to my teammate on slack?",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the README install section with the new pip command and the python 3.12 requirement",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 5,
+      "description": "Use this skill whenever the user wants the knowledge from this coding session written into durable files before it's lost \u2014 into repo docs, a handoff or state file, or memory \u2014 then committed. This is the go-to skill the moment they signal the session is ending or shrinking: \"checkpoint\", \"I'm about to /compact\", \"context is getting huge\", \"save/persist/consolidate our progress\", \"record where we are\", \"update the handoff doc\", \"wrapping up\", \"I need to step away\", or handing off to the next session / tomorrow-me. Also fire when they ask to write down specific session artifacts \u2014 decisions and rationale, a bug and its root cause, what was tried and rejected, current state, open questions, what's next. Works in any language. The intent is moving volatile chat knowledge into version-controlled docs so the next session continues cleanly. Skip it for pushing/PRs, release notes, zipping or backing up files, database/WAL or ML-training checkpoints, or merely recapping the chat back to the user.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "let's make a savepoint of where the project stands: update the changelog with this round, refresh the 'you are here' snapshot, and note the new open question about audio longer than 10 minutes",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "before we wrap for the day: capture the decision to drop redis, the root cause of that 46s timestamp bug, and the dead-end with the scheduler lib, somewhere durable so we don't relitigate it next week",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "write a docstring for the run_transcribe function explaining each parameter and the return value",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we made a bunch of architecture calls today (subprocess workers, sqlite for tasks, the single render path). persist those with their rationale into the decisions doc before i lose this thread",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "running low on context window here. make sure the stuff we figured out about the migration ordering doesn't evaporate when this session compacts",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wait what did we decide earlier about the cache \u2014 redis or in-memory? i forget",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "update the README install section with the new pip command and the python 3.12 requirement",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "can you summarize this conversation for me so i can paste it to my teammate on slack?",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "i'm about to hit the context limit. persist our progress into the repo docs first \u2014 what changed this round and where we are, so the next session picks up cleanly",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "wrapping up \u2014 record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state \u2014 the usual handoff",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "\u6211\u4eec\u4eca\u5929\u641e\u4e86\u633a\u591a\u7684\uff0c\u5f85\u4f1a\u513f\u8981 /compact \u4e86\uff0c\u5148\u628a\u51b3\u7b56\u3001\u90a3\u4e2a\u5b57\u5e55\u8d85\u524d bug \u7684\u6839\u56e0\u3001\u8fd8\u6709\u5f53\u524d\u8fdb\u5ea6\u6c89\u6dc0\u8fdb\u6587\u6863\u5427",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "push the current feat/cache branch to origin and open a PR against main",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "take a snapshot of the current docs/ folder and zip it up so i can email it",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "commit my staged changes with a clean conventional-commits message please",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "generate release notes for v2.0 from the git log between the last two tags",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "add a database checkpoint / WAL flush before i run this big migration on prod",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "save a checkpoint of the training run before the next epoch in case the box crashes",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

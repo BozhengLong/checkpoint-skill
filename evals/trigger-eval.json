@@ -1,0 +1,22 @@
+[
+  {"query": "we've been debugging this auth flow for like 3 hours and my context is getting huge. before you compact everything, can you write down what we decided about token refresh, the race condition we found, and where we left off, into the project docs?", "should_trigger": true},
+  {"query": "ok i need to step away. update the handoff doc and current-task-state so tomorrow-me knows we switched from celery to a subprocess worker and why, plus the two things still broken", "should_trigger": true},
+  {"query": "running low on context window here. make sure the stuff we figured out about the migration ordering doesn't evaporate when this session compacts", "should_trigger": true},
+  {"query": "before we wrap for the day: capture the decision to drop redis, the root cause of that 46s timestamp bug, and the dead-end with the scheduler lib, somewhere durable so we don't relitigate it next week", "should_trigger": true},
+  {"query": "我们今天搞了挺多的，待会儿要 /compact 了，先把决策、那个字幕超前 bug 的根因、还有当前进度沉淀进文档吧", "should_trigger": true},
+  {"query": "can you consolidate everything from this session into the docs and commit it? decisions, the bug we fixed, open questions, current state — the usual handoff", "should_trigger": true},
+  {"query": "i'm about to hit the context limit. persist our progress into the repo docs first — what changed this round and where we are, so the next session picks up cleanly", "should_trigger": true},
+  {"query": "let's make a savepoint of where the project stands: update the changelog with this round, refresh the 'you are here' snapshot, and note the new open question about audio longer than 10 minutes", "should_trigger": true},
+  {"query": "we made a bunch of architecture calls today (subprocess workers, sqlite for tasks, the single render path). persist those with their rationale into the decisions doc before i lose this thread", "should_trigger": true},
+  {"query": "wrapping up — record this session into the project's docs and memory: what we built, the bug plus root cause, what we tried and rejected, and what's next", "should_trigger": true},
+  {"query": "commit my staged changes with a clean conventional-commits message please", "should_trigger": false},
+  {"query": "push the current feat/cache branch to origin and open a PR against main", "should_trigger": false},
+  {"query": "can you summarize this conversation for me so i can paste it to my teammate on slack?", "should_trigger": false},
+  {"query": "write a docstring for the run_transcribe function explaining each parameter and the return value", "should_trigger": false},
+  {"query": "update the README install section with the new pip command and the python 3.12 requirement", "should_trigger": false},
+  {"query": "wait what did we decide earlier about the cache — redis or in-memory? i forget", "should_trigger": false},
+  {"query": "save a checkpoint of the training run before the next epoch in case the box crashes", "should_trigger": false},
+  {"query": "add a database checkpoint / WAL flush before i run this big migration on prod", "should_trigger": false},
+  {"query": "take a snapshot of the current docs/ folder and zip it up so i can email it", "should_trigger": false},
+  {"query": "generate release notes for v2.0 from the git log between the last two tags", "should_trigger": false}
+]

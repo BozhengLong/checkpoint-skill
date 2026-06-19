@@ -9,12 +9,14 @@ description: >-
   decisions and their rationale, bugs and root causes, dead-ends, the current
   "you are here" state, and new open questions — and routes each into the right
   document (snapshot replaced, changelog prepended, decisions and bugs appended),
-  then commits the docs without pushing. The value is editorial judgment about
-  what to persist and where, not dumping the transcript.
+  then commits the docs without pushing. It writes structured knowledge to
+  durable files and is not a conversation summary or recap for the user. The
+  value is editorial judgment about what to persist and where, not dumping the
+  transcript.
 license: MIT
 disable-model-invocation: true
 metadata:
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Checkpoint — save session knowledge to durable memory
@@ -124,6 +126,8 @@ Redis cache routes like this:
 ## Don't
 
 - Don't dump the raw transcript anywhere.
+- Don't use it as a conversation summarizer or recap for the user — it persists
+  structured knowledge to files, it doesn't narrate the chat back.
 - Don't write the same fact to more than one doc.
 - Don't run after compaction — you'd be checkpointing a lossy summary.
 - Don't create new files or abstractions for hypothetical future structure.

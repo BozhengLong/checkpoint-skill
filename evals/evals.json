@@ -1,0 +1,61 @@
+{
+  "skill": "checkpoint",
+  "method": "skill-creator-style eval. Blind judges (Sonnet for the main suite, Haiku for a weak-model stress pass) see the skill name + description ONLY and classify USE vs SKIP per prompt. Hit rate = USE on should-use; false-positive rate = USE on should-not-use. Output quality: an execution agent runs the full checkpoint on a synthetic project (no rubric given) and is graded on routing correctness.",
+  "description_v1": "Consolidate the current coding session's durable knowledge into the project's persistent docs and memory before the context window is compacted or the session ends, while recall is still high-fidelity. ... then commits the docs without pushing. The value is editorial judgment about what to persist and where, not dumping the transcript.",
+  "description_final": "Consolidate the current coding session's durable knowledge into the project's persistent docs and memory before the context window is compacted or the session ends, while recall is still high-fidelity. Run it when wrapping up a work batch, right before compacting, or whenever the user asks to checkpoint, consolidate, save context, or hand off. It reviews what the session produced — decisions and their rationale, bugs and root causes, dead-ends, the current 'you are here' state, and new open questions — and routes each into the right document (snapshot replaced, changelog prepended, decisions and bugs appended), then commits the docs without pushing. It writes structured knowledge to durable files and is not a conversation summary or recap for the user. The value is editorial judgment about what to persist and where, not dumping the transcript.",
+  "tuning_change": "Added the clause 'It writes structured knowledge to durable files and is not a conversation summary or recap for the user.' to fix a Haiku-only false positive: 'Summarize this conversation for me' triggered USE on 2/3 Haiku judges pre-tune. Post-tune that case plus two recap/summary variants all SKIP 3/3 on Haiku, with no regression on legit triggers or the commit-code trap.",
+  "trigger_cases": [
+    { "id": "u1",  "expect": "use",    "prompt": "We've done a ton today. I'm about to /compact — can you save where we are first?" },
+    { "id": "u2",  "expect": "use",    "prompt": "Let's wrap up. Update the handoff docs before we lose all this context." },
+    { "id": "u3",  "expect": "use",    "prompt": "Before I close this session, persist the decisions we made and why, so the next session has them." },
+    { "id": "u4",  "expect": "use",    "prompt": "Context window is almost full. Checkpoint?" },
+    { "id": "u5",  "expect": "use",    "prompt": "Record the bug root-cause and the approach we settled on into the project docs." },
+    { "id": "u6",  "expect": "use",    "prompt": "Consolidate everything we figured out into the docs and commit it." },
+    { "id": "u7",  "expect": "use",    "prompt": "沉淀一下,待会儿要 compact 了。" },
+    { "id": "u8",  "expect": "use",    "prompt": "Update current-task-state and HANDOFF with this round of work." },
+    { "id": "u9",  "expect": "use",    "prompt": "I need to hand this off — capture the current state, open questions, and what we tried and rejected." },
+    { "id": "u10", "expect": "use",    "prompt": "We're running low on context. Make sure what we learned isn't lost when this compacts." },
+    { "id": "n1",  "expect": "no-use", "prompt": "Commit this code change." },
+    { "id": "n2",  "expect": "no-use", "prompt": "Save this file." },
+    { "id": "n3",  "expect": "no-use", "prompt": "Summarize this conversation for me.", "note": "Pre-tune Haiku false positive (USE 2/3); post-tune SKIP 3/3." },
+    { "id": "n4",  "expect": "no-use", "prompt": "Write a docstring for this function." },
+    { "id": "n5",  "expect": "no-use", "prompt": "Update the README with the new install steps." },
+    { "id": "n6",  "expect": "no-use", "prompt": "What did we decide earlier about the cache layer?" },
+    { "id": "n7",  "expect": "no-use", "prompt": "Push my commits to GitHub." },
+    { "id": "n8",  "expect": "no-use", "prompt": "Run the tests and fix whatever's failing." },
+    { "id": "n9",  "expect": "no-use", "prompt": "Take a snapshot of the production database." },
+    { "id": "n10", "expect": "no-use", "prompt": "Generate release notes for v2.0 from the git log." }
+  ],
+  "boundary_cases": [
+    { "id": "d1", "expect": "no-use", "prompt": "Write up an ADR (architecture decision record) for the auth change." },
+    { "id": "d2", "expect": "use",    "prompt": "I'm leaving for the day — jot down where we are so I can resume tomorrow." },
+    { "id": "d3", "expect": "use",    "prompt": "Add today's progress to the changelog." },
+    { "id": "d4", "expect": "no-use", "prompt": "Just remember that I prefer Postgres for this project." },
+    { "id": "d5", "expect": "no-use", "prompt": "Document everything we talked about into a notes file." },
+    { "id": "d6", "expect": "use",    "prompt": "Before we move on to the next feature, capture the decisions and open issues from this one." }
+  ],
+  "homonym_cases": [
+    { "id": "h1", "expect": "no-use", "prompt": "Save a checkpoint of the training run." },
+    { "id": "h2", "expect": "no-use", "prompt": "Checkpoint the model weights every epoch." },
+    { "id": "h3", "expect": "no-use", "prompt": "Add a database checkpoint before the migration." },
+    { "id": "h4", "expect": "no-use", "prompt": "Set a checkpoint in the debugger at this line." },
+    { "id": "h5", "expect": "no-use", "prompt": "Create a git checkpoint commit of my code changes." }
+  ],
+  "output_cases": [
+    {
+      "id": "o1",
+      "setup": "A project with a CLAUDE.md doc-index pointing to docs/{current-task-state,HANDOFF,decisions,debugging-notes,open-questions}.md (each pre-populated) plus a memory/ dir. Session brief: (a) decided in-memory cache over Redis (single-node, avoid ops); (b) found a 46s timestamp error, root cause = sentence-relative word offsets; (c) tried and rejected a 3rd-party scheduler lib (license); (d) now on branch feat/cache, tests green, ready to wire the endpoint; (e) new open question: behavior under >10min audio; (f) user said they dislike adding infra deps for internal tools.",
+      "rubric": [
+        "Decision (a) appended to decisions.md as a new numbered entry with rationale",
+        "Bug (b) appended to debugging-notes.md with symptom + root cause",
+        "Dead-end (c) recorded (decisions or HANDOFF) so it isn't re-litigated",
+        "State (d) written to current-task-state.md by REPLACING the snapshot, not appending",
+        "A new HANDOFF.md round PREPENDED (newest first) summarizing the batch",
+        "Open question (e) added to open-questions.md",
+        "User preference (f) routed to cross-session memory, not a project doc",
+        "No single fact duplicated across two docs (cross-refs by pointer are fine)",
+        "Docs committed, NOT pushed"
+      ]
+    }
+  ]
+}

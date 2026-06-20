@@ -16,7 +16,7 @@ description: >-
 license: MIT
 disable-model-invocation: true
 metadata:
-  version: 1.1.0
+  version: 1.2.0
 ---
 
 # Checkpoint — save session knowledge to durable memory
@@ -52,6 +52,13 @@ finished, the user signals winding down ("commit", "let's compact", "wrap up",
 "save our progress"), or a context-low warning appears. Phrase the offer as
 "Checkpoint before we compact?" — then let the user run `/checkpoint`.
 
+**Getting reminded without auto-firing:** this skill stays manual on purpose — it
+commits, and Claude Code hooks can't see context usage anyway (their stdin has no
+token/percentage fields). The reliable nudge is a **statusline**, which *does*
+receive `context_window.used_percentage`: show it live and append a `/checkpoint`
+hint past ~80% (see the repo README). A `PreCompact` hook is only a weak fallback —
+it fires at the limit and can print a warning but can't synthesize state.
+
 ## Step 0 — Discover this project's durable-doc map
 
 This skill is project-agnostic: it knows the *roles* of durable knowledge and
@@ -81,6 +88,13 @@ project with none, follow the bootstrap rule, not the table.
 | Architecture | how things connect | `architecture-notes.md` | EDIT section |
 | Open questions | known uncertainties | `open-questions.md` | APPEND / update |
 | Cross-session facts | user / feedback / project / reference | auto-memory dir + `MEMORY.md` | per memory rules |
+
+- **Snapshot shape:** the snapshot answers "you are here" in a fixed set of
+  fields — current task · pending work · key decisions · files touched · next
+  step — so any reader reorients in seconds.
+- **REPLACE loses no history:** the snapshot holds only "now"; the history it
+  sheds lives in the PREPEND changelog, and prior snapshots stay in the file's
+  git history.
 
 ### Bootstrapping a bare project
 

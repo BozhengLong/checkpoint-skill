@@ -78,6 +78,25 @@ before compaction (it offers; you still run `/checkpoint`):
   "Checkpoint before we compact?". Don't run it unprompted.
 ```
 
+## Optional — get nudged at ~80% context (statusline)
+
+`/checkpoint` is manual by design (it commits, so it must never auto-fire) — and
+Claude Code **hooks can't see context usage** (their stdin carries no
+token/percentage fields), so a "fire at 80%" hook isn't reliable. The
+**statusline** *can*: it receives `context_window.used_percentage`.
+[`extras/statusline-checkpoint-hint.sh`](./extras/statusline-checkpoint-hint.sh)
+prints your live context % and appends a `/checkpoint` hint past a threshold
+(default 80; override with `CHECKPOINT_HINT_PCT`).
+
+```json
+{ "statusLine": { "type": "command", "command": "/abs/path/to/extras/statusline-checkpoint-hint.sh" } }
+```
+
+**Already use a HUD / statusline (e.g. claude-hud)? Don't replace it** — it most
+likely already shows context %; just set its threshold/alert there. A
+`PreCompact` hook is only a weak fallback: it fires at the limit and can print a
+warning but can't synthesize state or run the command.
+
 ## Validation
 
 Evaluated with Anthropic's `skill-creator` (the real `run_loop.py`, driving

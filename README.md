@@ -51,12 +51,18 @@ snapshot + changelog and tells you. It never invents structure silently or pushe
 
 ## Install
 
+Requires [Claude Code](https://code.claude.com/docs/en/skills). The skill itself
+has no dependencies; the optional reminder scripts (below) are bash + `jq`
+(macOS/Linux).
+
 ```bash
 git clone https://github.com/BozhengLong/checkpoint-skill.git
 cp -r checkpoint-skill/checkpoint ~/.claude/skills/
 ```
 
-Prefer it scoped to one project? Copy into that repo's `.claude/skills/` instead.
+Or download `checkpoint.skill` from the [latest release](https://github.com/BozhengLong/checkpoint-skill/releases/latest)
+and unzip it into `~/.claude/skills/`. Prefer it scoped to one project? Copy into
+that repo's `.claude/skills/` instead.
 
 ## Use
 
@@ -65,6 +71,10 @@ When you're wrapping up a work batch or about to `/compact`:
 ```
 /checkpoint
 ```
+
+It updates your "you are here" snapshot, prepends a changelog entry, routes
+decisions / bugs / open questions to their docs, writes cross-session facts to
+memory, then commits (never pushes) and tells you what went where.
 
 ## Optional — let Claude offer it proactively
 
@@ -85,7 +95,8 @@ Claude Code **hooks can't see context usage** — their stdin carries no
 token/percentage fields, so a "fire at N%" hook is impossible. Only the
 **statusline** gets `context_window.used_percentage`, so the companion scripts
 bridge from it. Threshold defaults to **70** (override `CHECKPOINT_HINT_PCT`).
-Pick your setup:
+These scripts need [`jq`](https://jqlang.github.io/jq/); in the snippets below
+replace `/abs/.../` with the absolute path where you cloned the repo. Pick your setup:
 
 **A. Status bar only (passive).** Set
 [`extras/statusline-checkpoint-hint.sh`](./extras/statusline-checkpoint-hint.sh)

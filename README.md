@@ -43,8 +43,11 @@ It ships with `disable-model-invocation: true`, so it never fires on its own
 | Open questions | `open-questions.md` | append / update |
 | Cross-session facts | auto-memory dir + `MEMORY.md` | per memory rules |
 
-If a role has no file in your project, it follows your conventions or asks —
-it won't invent new doc structure unprompted.
+If a role has no file in your project, it follows your conventions. And if the
+project has **no durable-doc structure at all**, it bootstraps one: when you're
+present it offers to stand up the full set under `docs/` (+ a `CLAUDE.md` index
+so the next run is self-describing); run head-less it creates just a minimal
+snapshot + changelog and tells you. It never invents structure silently or pushes.
 
 ## Install
 

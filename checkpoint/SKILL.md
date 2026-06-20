@@ -16,7 +16,7 @@ description: >-
 license: MIT
 disable-model-invocation: true
 metadata:
-  version: 1.0.1
+  version: 1.1.0
 ---
 
 # Checkpoint — save session knowledge to durable memory
@@ -63,9 +63,14 @@ maps each to whatever file the current project uses. Resolve the map in order:
 3. The Claude Code auto-memory directory always exists at
    `~/.claude/projects/<project-slug>/memory/` (`MEMORY.md` index plus one file
    per fact) — cross-session facts always have a home.
-4. If a role has real content this session but no file exists, follow the
-   project's conventions to place it; if there's no convention, ask the user or
-   fold it into the snapshot. Don't invent new doc structure unprompted.
+4. A role has content but no file? If the project clearly uses a doc convention
+   (its `CLAUDE.md` names the file, or sibling docs exist), create that one file
+   to match. If the project has **no durable-doc structure at all** (no doc
+   index, no docs), don't silently scaffold — use *Bootstrapping a bare project*
+   below.
+
+The table below is where each role goes **once a structure exists**; for a
+project with none, follow the bootstrap rule, not the table.
 
 | Knowledge role | Universal meaning | Conventional file | Write mode |
 |---|---|---|---|
@@ -76,6 +81,27 @@ maps each to whatever file the current project uses. Resolve the map in order:
 | Architecture | how things connect | `architecture-notes.md` | EDIT section |
 | Open questions | known uncertainties | `open-questions.md` | APPEND / update |
 | Cross-session facts | user / feedback / project / reference | auto-memory dir + `MEMORY.md` | per memory rules |
+
+### Bootstrapping a bare project
+
+Only when neither a doc index nor any conventional docs exist. Cross-session
+facts still go to the auto-memory dir (it always exists) — unconditional. For
+project-technical knowledge:
+
+- **The user is present:** offer to stand up the structure; on their OK, create
+  the full set under `docs/` — `current-task-state.md`, `HANDOFF.md`,
+  `decisions.md`, `debugging-notes.md`, `open-questions.md` — fill each with this
+  session's content (a one-line `_None yet._` where a category is empty), route
+  into them, and add a short **Document index** to `CLAUDE.md` (create a minimal
+  one if absent) so the next checkpoint lands in the normal path. Standing up the
+  empty headers is fine here because the user approved it.
+- **You can't ask** (headless / auto-invoked): don't impose a full structure
+  nobody approved. Create only the minimal pair — `docs/current-task-state.md`
+  (snapshot) + `docs/HANDOFF.md` (changelog, with this round's decisions, bugs,
+  and open questions folded into the entry) — plus the `CLAUDE.md` index, then
+  state plainly what you created.
+
+Either path is a docs-only commit, never pushed — trivially reversible.
 
 ## Step 1 — Gather ground truth
 

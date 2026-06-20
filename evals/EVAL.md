@@ -116,6 +116,24 @@ does this well without the skill.
 
 ---
 
+## D. Bare-project bootstrap (v1.1.0) — validated
+
+Earlier evals all used projects that already had a `CLAUDE.md` doc-index, so the
+"no structure at all" case was never exercised. v1.1.0 adds an explicit bootstrap
+branch; validated end-to-end on two truly-bare repos (README + code only, no
+CLAUDE.md, no docs):
+
+| Run | Path taken | Result |
+|---|---|---|
+| headless (no consent possible) | minimal fallback | created **only** `docs/current-task-state.md` + `docs/HANDOFF.md` (decision/bug/open-q folded into the HANDOFF entry) + a `CLAUDE.md` doc-index; committed, not pushed |
+| consent given | full bootstrap | created the **full 5-file** `docs/` set + `CLAUDE.md` doc-index; committed, not pushed |
+
+Both wrote the cross-session preference to memory, left `SESSION_BRIEF` uncommitted,
+and added a `CLAUDE.md` index so the **next** checkpoint lands in the normal
+(structured) path. The fallback correctly stayed minimal rather than sprawling.
+
+---
+
 ## Outcome
 
 - **Description unchanged** — `run_loop` confirmed the original is best by

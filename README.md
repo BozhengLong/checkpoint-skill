@@ -78,24 +78,43 @@ before compaction (it offers; you still run `/checkpoint`):
   "Checkpoint before we compact?". Don't run it unprompted.
 ```
 
-## Optional — get nudged at ~80% context (statusline)
+## Optional — get nudged at ~70% context
 
-`/checkpoint` is manual by design (it commits, so it must never auto-fire) — and
-Claude Code **hooks can't see context usage** (their stdin carries no
-token/percentage fields), so a "fire at 80%" hook isn't reliable. The
-**statusline** *can*: it receives `context_window.used_percentage`.
+`/checkpoint` is manual by design (it commits, so it must never auto-fire), and
+Claude Code **hooks can't see context usage** — their stdin carries no
+token/percentage fields, so a "fire at N%" hook is impossible. Only the
+**statusline** gets `context_window.used_percentage`, so the companion scripts
+bridge from it. Threshold defaults to **70** (override `CHECKPOINT_HINT_PCT`).
+Two flavors — use either or both:
+
+**A. Statusline hint (passive).**
 [`extras/statusline-checkpoint-hint.sh`](./extras/statusline-checkpoint-hint.sh)
-prints your live context % and appends a `/checkpoint` hint past a threshold
-(default 80; override with `CHECKPOINT_HINT_PCT`).
-
+prints your live context % and appends `⚠️ run /checkpoint` past the threshold.
 ```json
-{ "statusLine": { "type": "command", "command": "/abs/path/to/extras/statusline-checkpoint-hint.sh" } }
+{ "statusLine": { "type": "command", "command": "/abs/.../extras/statusline-checkpoint-hint.sh" } }
 ```
 
-**Already use a HUD / statusline (e.g. claude-hud)? Don't replace it** — it most
-likely already shows context %; just set its threshold/alert there. A
-`PreCompact` hook is only a weak fallback: it fires at the limit and can print a
-warning but can't synthesize state or run the command.
+**B. In Claude's reply (active).** That same statusline script also writes a
+per-session sentinel; a `UserPromptSubmit` hook
+([`extras/checkpoint-nudge-hook.sh`](./extras/checkpoint-nudge-hook.sh)) reads it
+and injects a one-line nudge into context, so Claude reminds you *in its reply*.
+Debounced (re-nudges only after 5 min or a higher 10% band).
+```json
+{ "hooks": { "UserPromptSubmit": [ { "hooks": [
+  { "type": "command", "command": "/abs/.../extras/checkpoint-nudge-hook.sh" } ] } ] } }
+```
+
+**Already use a HUD / statusline (e.g. claude-hud)?** Don't replace it — *wrap*
+it: a tiny script writes the sentinel, then calls your HUD with the same stdin
+(see the script header). There's only one `statusLine` command, so wrapping is
+the way. A `PreCompact` hook is just a weak fallback (fires at the limit; can
+warn but not synthesize).
+
+**For other users / sharing:** the reminder is **opt-in and per-user** — it lives
+in each user's own `~/.claude` (settings + scripts), *not* in the `.skill`
+bundle. Users who don't set it up just run `/checkpoint` manually; nothing
+breaks. Users who do are fully isolated (own `~/.claude`; sentinel keyed by
+`session_id`) — no cross-user interference, even on a shared machine.
 
 ## Validation
 

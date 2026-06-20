@@ -16,7 +16,7 @@ description: >-
 license: MIT
 disable-model-invocation: true
 metadata:
-  version: 1.2.0
+  version: 1.4.0
 ---
 
 # Checkpoint — save session knowledge to durable memory
@@ -56,7 +56,7 @@ finished, the user signals winding down ("commit", "let's compact", "wrap up",
 commits, and Claude Code hooks can't see context usage anyway (their stdin has no
 token/percentage fields). The reliable nudge is a **statusline**, which *does*
 receive `context_window.used_percentage`: show it live and append a `/checkpoint`
-hint past ~80% (see the repo README). A `PreCompact` hook is only a weak fallback —
+hint past ~70% (see the repo README). A `PreCompact` hook is only a weak fallback —
 it fires at the limit and can print a warning but can't synthesize state.
 
 ## Step 0 — Discover this project's durable-doc map

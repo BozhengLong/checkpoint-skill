@@ -85,30 +85,45 @@ Claude Code **hooks can't see context usage** — their stdin carries no
 token/percentage fields, so a "fire at N%" hook is impossible. Only the
 **statusline** gets `context_window.used_percentage`, so the companion scripts
 bridge from it. Threshold defaults to **70** (override `CHECKPOINT_HINT_PCT`).
-Two flavors — use either or both:
+Pick your setup:
 
-**A. Statusline hint (passive).**
+**A. Status bar only (passive).** Set
 [`extras/statusline-checkpoint-hint.sh`](./extras/statusline-checkpoint-hint.sh)
-prints your live context % and appends `⚠️ run /checkpoint` past the threshold.
+as your statusLine — it prints your live context % and appends `⚠️ run /checkpoint`
+past the threshold.
 ```json
 { "statusLine": { "type": "command", "command": "/abs/.../extras/statusline-checkpoint-hint.sh" } }
 ```
 
-**B. In Claude's reply (active).** That same statusline script also writes a
-per-session sentinel; a `UserPromptSubmit` hook
-([`extras/checkpoint-nudge-hook.sh`](./extras/checkpoint-nudge-hook.sh)) reads it
-and injects a one-line nudge into context, so Claude reminds you *in its reply*.
-Debounced (re-nudges only after 5 min or a higher 10% band).
+**B. In Claude's reply — blank slate (no statusline/HUD yet).** Use that same
+statusline script (it *also* writes a per-session sentinel) **plus** a
+`UserPromptSubmit` hook
+([`extras/checkpoint-nudge-hook.sh`](./extras/checkpoint-nudge-hook.sh)) that
+reads the sentinel and injects a one-line nudge, so Claude reminds you *in its
+reply*. Debounced (re-nudges only after 5 min or a higher 10% band).
 ```json
-{ "hooks": { "UserPromptSubmit": [ { "hooks": [
-  { "type": "command", "command": "/abs/.../extras/checkpoint-nudge-hook.sh" } ] } ] } }
+{
+  "statusLine": { "type": "command", "command": "/abs/.../extras/statusline-checkpoint-hint.sh" },
+  "hooks": { "UserPromptSubmit": [ { "hooks": [
+    { "type": "command", "command": "/abs/.../extras/checkpoint-nudge-hook.sh" } ] } ] }
+}
 ```
 
-**Already use a HUD / statusline (e.g. claude-hud)?** Don't replace it — *wrap*
-it: a tiny script writes the sentinel, then calls your HUD with the same stdin
-(see the script header). There's only one `statusLine` command, so wrapping is
-the way. A `PreCompact` hook is just a weak fallback (fires at the limit; can
-warn but not synthesize).
+**C. In Claude's reply — you already use a HUD (e.g. claude-hud).** Don't replace
+your HUD — point your statusLine at
+[`extras/statusline-hud-wrapper.sh`](./extras/statusline-hud-wrapper.sh) instead.
+It writes the sentinel, then renders your HUD **unchanged** (targets claude-hud
+out of the box; the header shows how to adapt it for another HUD and a one-line
+**differential test** to confirm it renders identically). Add the same hook as B.
+```json
+{
+  "statusLine": { "type": "command", "command": "/abs/.../extras/statusline-hud-wrapper.sh" },
+  "hooks": { "UserPromptSubmit": [ { "hooks": [
+    { "type": "command", "command": "/abs/.../extras/checkpoint-nudge-hook.sh" } ] } ] }
+}
+```
+
+A `PreCompact` hook is only a weak fallback (fires at the limit; can warn but not synthesize).
 
 **For other users / sharing:** the reminder is **opt-in and per-user** — it lives
 in each user's own `~/.claude` (settings + scripts), *not* in the `.skill`
